@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="index.css">
+    <title>shoping-cart</title>
+</head>
+<body>
+    <div id="root">
+        <div class="device" id="list">
+            <div class="header">商品列表</div>
+            <div class="chanel">
+                <ul class="chanel-list clearfix">
+                    <li class="chanel-item" 
+                        v-for="(item,index) in cates" 
+                        :key="item.id"
+                        @click="changeCate(index)"
+                        :class="{selected:cateIndex === index}"
+                        >
+                        {{item.des}}
+                    </li>
+                </ul>
+            </div>
+            <div class="filter-bar">
+                <ul class="filter-list">
+                    <li 
+                        class="filter-item" 
+                        v-for="(item,index) in filters" :key="index"
+                        :class="{'filter-selected':filterIndex===index,'filter-price':item.id===2,'asce':isAsce,'desc':!isAsce}"
+                        @click="sortBy(item.method,index)"
+                        >
+                        {{item.name}}
+                    </li>
+                </ul>
+            </div>
+            <div class="goods">
+                <ul class="goods-list">
+                    <li class="goods-item" v-for="(item,index) in list" :key="item.id">
+                        <div class="goods-img">
+                            <img :src="item.img" alt="">
+                            <span class="hot-sale"
+                            v-if="item.ishot"
+                            >热</span>
+                        </div>
+                        <div class="goods-info">
+                            <p class="goods-title">{{item.name}}</p>
+                            <div class="goods-price">￥{{item.price}}</div>
+                            <span class="goods-sale">{{item.sales}}人付款</span>
+                        </div>
+                        <span 
+                            class="add-in-cart"
+                            @click="addToCart(item)"
+                        >+</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="device" id="cart">
+            <div class="header">
+                购物清单
+                <span 
+                    class="action edit" 
+                    v-if="isEdite" 
+                    @click="toggleEdite">   
+                    编辑
+                </span>
+                <span 
+                    class="action finish" 
+                    v-else
+                    @click="toggleEdite"
+                    >
+                    完成
+                </span>
+            </div>
+            <div class="goods cart-list">
+                    <ul class="goods-list">
+                        <li class="goods-item" v-for="(item,index) in cartList" :key="item.id">
+                            <span 
+                                class="selector" @click="selectGood(item)"
+                                :class="{'is-selected':item.checked}"
+                                >
+                            </span>
+                            <div class="goods-img">
+                                <img :src="item.img" alt="">
+                            </div>
+                            <div class="goods-info">
+                                <p class="goods-title">{{item.name}}</p>
+                                <div class="goods-price">￥{{item.price}}</div>
+                                <span class="goods-sale">库存{{item.stock}}件</span>
+                            </div>
+                            <div class="btn-wrapper">
+                                <div class="add" @click="changeQuantity(true,item)">+</div>
+                                <div class="num">{{item.quantity}}</div>
+                                <div class="minus" @click="changeQuantity(false,item)">-</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            <div class="action-bar clearfix">
+                <div class="selector-wrapper" @click="selectAll">
+                    <span class="selector" :class="{'is-selected':allCheck}"></span>全选
+                </div>
+                <div class="btn" v-if="isEdite">
+                    去结算({{totalQuantity}})
+                </div>
+                <div class="btn delete" @click="deleteGood" v-else="!isEdite">
+                    删除({{totalQuantity}})
+                </div>
+                <div class="total" v-if="isEdite">
+                    合计：<span>￥{{totalPrice}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./vue.min.js"></script>
+    <script src="./index.js"></script>
+</body>
+</html>
